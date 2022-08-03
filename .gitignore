@@ -9,3 +9,11 @@
 # Maven
 log/
 target/
+
+tomcat.8080
+work/
+
+#Files
+*.jpeg
+*.jpg
+*.png
