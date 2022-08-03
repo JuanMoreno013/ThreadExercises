@@ -1,7 +1,6 @@
 package task1;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +11,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 
 @MultipartConfig
 @WebServlet("/dataFile")
@@ -34,22 +34,31 @@ public class DataFile extends HttpServlet {
         String typeFile = getFileExtension(fileName);
 
 
-        try (InputStream is = filePart.getInputStream()) {
-            byte[] buffer = new byte[4096];
-            int n = 0;
+        try {
+            InputStream is = filePart.getInputStream();
+            byte[] buffer = new byte[1048];
+            int n;
+            int countBufferPosition = 0;
+            int positionBuffer;
 
             ExecutorService pool = Executors.newCachedThreadPool();
-
             RandomAccessFile newFile = new RandomAccessFile(fileName, "rw");
 
             while ((n = is.read(buffer)) != -1) {
 
-                WriterFile processFile = new WriterFile(buffer, n, newFile);
+                positionBuffer = countBufferPosition * buffer.length;
+                byte[] bufferClone = buffer.clone();
+                WriterFile processFile = new WriterFile(bufferClone, n, newFile, positionBuffer);
+
                 pool.execute(processFile);
+                countBufferPosition++;
 
             }
-            resp.getWriter().print("<h3> File uploaded successfully!! </h3>");
 
+            resp.getWriter().print(" File uploaded successfully!! ");
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
