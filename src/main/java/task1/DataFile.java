@@ -42,7 +42,7 @@ public class DataFile extends HttpServlet {
             int positionBuffer;
 
             ExecutorService pool = Executors.newCachedThreadPool();
-            RandomAccessFile newFile = new RandomAccessFile(fileName, "rw");
+            RandomAccessFile newFile = new RandomAccessFile("new" + fileName, "rw");
 
             while ((n = is.read(buffer)) != -1) {
 
@@ -56,6 +56,8 @@ public class DataFile extends HttpServlet {
             }
 
             resp.getWriter().print(" File uploaded successfully!! ");
+            resp.getWriter().write("File uploaded successfully!!");
+            resp.setStatus(200);
 
         } catch (Exception e) {
             e.printStackTrace();
