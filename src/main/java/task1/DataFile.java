@@ -55,8 +55,8 @@ public class DataFile extends HttpServlet {
 
             }
 
-            resp.getWriter().print(" File uploaded successfully!! ");
             resp.getWriter().write("File uploaded successfully!!");
+            resp.getWriter().close();
             resp.setStatus(200);
 
         } catch (Exception e) {
