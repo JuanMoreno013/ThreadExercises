@@ -1,6 +1,5 @@
 package task1;
 
-
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.*;
@@ -36,13 +35,6 @@ class DataFileTest {
 
         File messageFile = new File("MessageFile.txt");
 
-        FileOutputStream is = new FileOutputStream(messageFile);
-        OutputStreamWriter osw = new OutputStreamWriter(is);
-        Writer writerMessage = new BufferedWriter(osw);
-
-        writerMessage.write(messageInside);
-        writerMessage.close();
-
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
 
@@ -52,12 +44,10 @@ class DataFileTest {
         when(filePart.getSubmittedFileName()).thenReturn(nameFileImage);
         when(filePart.getInputStream()).thenReturn(new FileInputStream(dataFile));
 
-        when(response.getWriter()).thenReturn(new PrintWriter(writerMessage));
-
+        when(response.getWriter()).thenReturn(new PrintWriter(messageFile));
         when(response.getStatus()).thenReturn(200);
 
         new DataFile().doPost(request, response);
-
     }
 
 
@@ -167,7 +157,6 @@ class DataFileTest {
         assertFalse(sizeFileEquals);
     }
 
-    @Disabled
     @Test
     @DisplayName("Response , assert true, when the response its correct")
     void checkResponse() {
@@ -179,18 +168,10 @@ class DataFileTest {
             String line;
             String message = "";
             while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
                 message = line;
             }
-//            when(response.getWriter()).thenReturn(message);
-            System.out.println(response.getWriter().toString());
 
-
-            assertEquals(response.getWriter().toString(), message);
-
-//            response.getWriter().
-
-
+            assertEquals("File uploaded successfully!!", message);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
