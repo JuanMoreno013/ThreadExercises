@@ -1,16 +1,19 @@
 package task2;
 
 import java.util.*;
+import java.util.logging.Logger;
+
 
 public class Producer implements Runnable {
 
-    final Queue<Object> storeProducts;
+    final Logger logger = Logger.getLogger("Producer");
 
-    ManageProducts manageProducts = new ManageProducts();
+    final Queue<Object> storeProducts;
 
     final int queueLimit = 7;
 
     private final Map<Object, Integer> productsMap;
+
 
     public Producer(final Queue<Object> storeProducts, final Map<Object, Integer> productsMap) {
         this.storeProducts = storeProducts;
@@ -22,7 +25,7 @@ public class Producer implements Runnable {
         synchronized (storeProducts) {
 
             while (storeProducts.size() == queueLimit) {
-
+                logger.info("Limit reached, wait");
                 storeProducts.wait();
             }
         }
@@ -33,7 +36,13 @@ public class Producer implements Runnable {
 
             storeProducts.add(productToAdd);
             productsMap.replace(productToAdd, productsMap.get(productToAdd) + 1);//getValue(productsMap)+1);
-//            System.out.println(productsMap.get(productToAdd) );
+            Thread.sleep(1000);
+
+            System.out.println(productsMap.get(productToAdd));
+            System.out.println("Add product to Queue");
+
+            storeProducts.notify();
+
 
         }
 
@@ -54,6 +63,7 @@ public class Producer implements Runnable {
             try {
 
                 increase();
+                logger.info(Thread.currentThread().getName());
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
