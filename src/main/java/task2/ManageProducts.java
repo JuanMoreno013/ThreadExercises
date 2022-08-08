@@ -5,9 +5,8 @@ import lombok.Setter;
 import task2.products.*;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
+
 
 @Getter
 @Setter
@@ -26,8 +25,6 @@ public class ManageProducts {
     private Xiaomi xiaomi = new Xiaomi("Xiaomi", "Mi 2s");
     private ZTE zte = new ZTE("ZTE", "Ultimate ZTE 20");
 
-
-//    Queue<String> storeProducts = new LinkedList<>();
 
     private volatile int countProducts = 0;
     private String typeProduct;
@@ -49,25 +46,5 @@ public class ManageProducts {
 
         return productsMap;
     }
-
-
-//    synchronized void increase() {
-//        while (fullQueue) {
-//            try {
-//
-//                wait();
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//
-//            }
-//        }
-//
-//        if (storeProducts.size() == 7){
-//            fullQueue = true;
-//        }
-//
-//
-//    }
-
 
 }
