@@ -1,8 +1,10 @@
 package task2.products;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class Oppo {
     private final String nameCellphone;
     private final String model;
