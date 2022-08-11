@@ -1,68 +1,55 @@
 package task2.version1;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-
 import task2.version1.storageProducts.PhoneStorage;
-import task2.version1.storageProducts.Storage;
 import task2.version1.storageProducts.StorageQueue;
+
 
 import java.util.Random;
 
 
 public class Producer implements Runnable {
 
-    final Logger logger = Logger.getLogger("Producer");
-
+    private final Logger logger = Logger.getLogger("Producer");
+    private final PhoneStorage[] phoneStorage;
     private final StorageQueue storageQueue;
 
-    final int queueLimit = 5;
 
-    final PhoneStorage phoneStorage;
-
-
-    public Producer(final StorageQueue storageQueue, Storage storage) {
+    public Producer(final PhoneStorage[] storage, StorageQueue storageQueue) {
+        this.phoneStorage = storage;
         this.storageQueue = storageQueue;
-        this.phoneStorage = storage.getStorages()[new Random().nextInt(9)];
     }
 
+    private synchronized void increaseAmount(PhoneStorage phoneLook) {
+        phoneLook.setAmount(phoneLook.getAmount() + 1);
+    }
 
     public void increase() throws InterruptedException {
 
-        synchronized (phoneStorage) {
+        PhoneStorage phoneRandom = phoneStorage[new Random().nextInt(9)];
 
-            while (storageQueue.size() == queueLimit) {
-//                logger.info("No items to handle");
-                phoneStorage.wait();
+        for (PhoneStorage phoneLook : phoneStorage) {
+            if (phoneLook.equals(phoneRandom)) {
+                increaseAmount(phoneLook);
+                storageQueue.add(phoneLook);
+                break;
             }
         }
 
-        synchronized (phoneStorage) {
-
-            phoneStorage.setAmount(phoneStorage.getAmount() + 1);
-            storageQueue.add(phoneStorage);
-
-            logger.info("Producing --" + phoneStorage.getPhone().getPhone() + " amount:" + phoneStorage.getAmount());
-//            System.out.println("Producing --" + phoneStorage.getPhone().getPhone() + " amount:" + phoneStorage.getAmount());
-            phoneStorage.notify();
-
-            Thread.sleep(1000);
-        }
-
+        logger.info("Producing --" + phoneRandom.getPhone().getNameCellphone() + " amount:" + phoneRandom.getAmount());
     }
 
     @Override
     public void run() {
-        BasicConfigurator.configure();
-//        while (true) {
-        synchronized (this) {
-            try {
-                increase();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        for (int i = 0; i < 10; i++) {
+            synchronized (this) {
+                try {
+                    increase();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
-//        }
     }
 
 }
