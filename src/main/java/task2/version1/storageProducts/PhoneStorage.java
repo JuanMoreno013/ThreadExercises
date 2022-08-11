@@ -1,17 +1,33 @@
 package task2.version1.storageProducts;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import task2.products.Phone;
 
-@RequiredArgsConstructor
+import java.util.Objects;
+
+
 @ToString
+@Getter
+@Setter
 public class PhoneStorage {
-    @Getter
+
     private final Phone phone;
-    @Setter
-    @Getter
     private volatile int amount = 0;
 
+    public PhoneStorage(Phone phone) {
+        this.phone = phone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneStorage that = (PhoneStorage) o;
+        return amount == that.amount && phone.equals(that.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(phone, amount);
+    }
 }
