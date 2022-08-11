@@ -1,6 +1,5 @@
 package task2.version1;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import task2.version1.storageProducts.PhoneStorage;
 import task2.version1.storageProducts.StorageQueue;
@@ -8,7 +7,7 @@ import task2.version1.storageProducts.StorageQueue;
 
 public class Consumer implements Runnable {
 
-    final Logger logger = Logger.getLogger(this.getClass());
+    final Logger logger = Logger.getLogger("Consumer");
 
     private final StorageQueue storageQueue;
 
@@ -16,40 +15,28 @@ public class Consumer implements Runnable {
         this.storageQueue = storageQueue;
     }
 
+    public void decrease() {
 
-    public void decrease() throws InterruptedException {
-
-        PhoneStorage phoneStorage = storageQueue.poll();
-        storageQueue.decreaseMapValue(phoneStorage);
-
-        synchronized (phoneStorage) {
-            while (storageQueue.isEmpty()) {
-                phoneStorage.wait();
-            }
+        PhoneStorage phoneInsideQueue = storageQueue.poll();
+        synchronized (this){
+            phoneInsideQueue.setAmount(phoneInsideQueue.getAmount() - 1);
         }
 
-        synchronized (phoneStorage) {
-            phoneStorage.setAmount(phoneStorage.getAmount() - 1);
-            logger.info("Consuming " + phoneStorage.getPhone().getPhone() + " " + phoneStorage.getAmount());
-//            System.out.println("---Consuming--- " + phoneStorage.getPhone().getPhone() + ", amount:  " + phoneStorage.getAmount());
-            phoneStorage.notify();
-        }
-
+        logger.info("-- Consuming --" + phoneInsideQueue.getPhone().getNameCellphone() + " amount:" + phoneInsideQueue.getAmount());
     }
 
 
     @Override
     public void run() {
-        BasicConfigurator.configure();
-//        while (true) {
-        synchronized (this) {
-            try {
-                decrease();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        for (int i = 0; i < 10; i++) {
+            synchronized (this) {
+                try {
+                    decrease();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
-//        }
     }
 
 }
