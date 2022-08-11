@@ -1,20 +1,11 @@
 package task2.products;
 
-import lombok.Getter;
 import lombok.ToString;
 
-@Getter
 @ToString
-public class Apple {
-
-    private final String nameCellphone;
-    private final String model;
-
-
+public class Apple extends Phone {
     public Apple(String nameCellphone, String model) {
-        this.nameCellphone = nameCellphone;
-        this.model = model;
+        super(nameCellphone, model);
     }
-
 
 }

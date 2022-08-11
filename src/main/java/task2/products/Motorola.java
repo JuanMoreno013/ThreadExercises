@@ -5,12 +5,9 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class Motorola {
-    private final String nameCellphone;
-    private final String model;
+public class Motorola extends Phone {
 
     public Motorola(String nameCellphone, String model) {
-        this.nameCellphone = nameCellphone;
-        this.model = model;
+        super(nameCellphone, model);
     }
 }

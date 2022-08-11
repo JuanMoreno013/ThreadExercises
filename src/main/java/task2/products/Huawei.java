@@ -5,12 +5,9 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class Huawei {
-    private final String nameCellphone;
-    private final String model;
+public class Huawei extends Phone {
 
     public Huawei(String nameCellphone, String model) {
-        this.nameCellphone = nameCellphone;
-        this.model = model;
+        super(nameCellphone, model);
     }
 }
