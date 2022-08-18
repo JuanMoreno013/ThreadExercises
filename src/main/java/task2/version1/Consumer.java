@@ -18,10 +18,8 @@ public class Consumer implements Runnable {
     public void decrease() {
 
         PhoneStorage phoneInsideQueue = storageQueue.poll();
-        synchronized (this){
-            phoneInsideQueue.setAmount(phoneInsideQueue.getAmount() - 1);
-        }
 
+        phoneInsideQueue.setAmount(phoneInsideQueue.getAmount() - 1);
         logger.info("-- Consuming --" + phoneInsideQueue.getPhone().getNameCellphone() + " amount:" + phoneInsideQueue.getAmount());
     }
 

@@ -20,7 +20,7 @@ public class Producer implements Runnable {
         this.storageQueue = storageQueue;
     }
 
-    private synchronized void increaseAmount(PhoneStorage phoneLook) {
+    private void increaseAmount(PhoneStorage phoneLook) {
         phoneLook.setAmount(phoneLook.getAmount() + 1);
     }
 

@@ -50,23 +50,6 @@ public class StorageQueue {
     }
 
 
-    public synchronized PhoneStorage peek() throws InterruptedException {
-
-        while (phoneStorageQueue.isEmpty()) {
-            wait();
-        }
-        notify();
-        return phoneStorageQueue.peek();
-    }
-
-    public synchronized boolean isEmpty() throws InterruptedException {
-        while (phoneStorageQueue.isEmpty()){
-            wait();
-        }
-        notify();
-        return phoneStorageQueue.isEmpty();
-    }
-
     public synchronized PhoneStorage poll() {
 
         while (phoneStorageQueue.isEmpty()) {
