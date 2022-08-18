@@ -9,3 +9,9 @@
 # Maven
 log/
 target/
+
+#Files
+*.jpeg
+*.jpg
+*.png
+*.txt
