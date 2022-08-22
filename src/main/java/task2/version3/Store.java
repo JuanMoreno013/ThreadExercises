@@ -3,9 +3,8 @@ package task2.version3;
 import org.apache.log4j.BasicConfigurator;
 import task2.products.*;
 import task2.version3.storageProducts.PhoneStorage;
-import task2.version3.storageProducts.StorageQueue;
+import task2.version3.storageProducts.MapImplementation;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -15,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Store {
     private static final Map<Phone, AtomicInteger> productsMap = new ConcurrentHashMap<>();
-    private static final StorageQueue<PhoneStorage> storeQueue = new StorageQueue<>(productsMap);
+    private static final MapImplementation<PhoneStorage> mapImplementationProducts = new MapImplementation<>(productsMap);
 
 
     private static final Apple apple = new Apple("Apple", "Iphone 13");
@@ -62,15 +61,16 @@ public class Store {
         phoneStorages[8] = new PhoneStorage(xiaomi);
         phoneStorages[9] = new PhoneStorage(zte);
 
+        Producer producer = new Producer(phoneStorages, mapImplementationProducts);
 
         ExecutorService threadPoolProduce = Executors.newFixedThreadPool(5);
         for (int i = 0; i < 5; i++)
-            threadPoolProduce.execute(new Producer(phoneStorages, storeQueue));
+            threadPoolProduce.execute(producer);
 
 
         ExecutorService threadPool = Executors.newFixedThreadPool(10);
         for (int i = 0; i < 10; i++)
-            threadPool.execute(new Consumer(storeQueue));
+            threadPool.execute(new Consumer(mapImplementationProducts));
 
     }
 
