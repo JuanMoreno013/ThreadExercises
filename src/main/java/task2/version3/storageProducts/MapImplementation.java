@@ -21,26 +21,31 @@ public class MapImplementation<T> {
     public void put(T phoneStorage) {
 
         PhoneStorage newPhoneStorage = (PhoneStorage) phoneStorage;
-        newPhoneStorage.getAmount().getAndIncrement();
-
         keyForMap = () -> newPhoneStorage;
-        productsMap.replace(keyForMap.get().getPhone(), newPhoneStorage.getAmount());
+
+        productsMap.computeIfPresent(newPhoneStorage.getPhone(), (phoneKey, count) -> {
+            count = newPhoneStorage.getAmount();
+            count.getAndIncrement();
+
+            return count;
+        });
 
     }
 
     public T remove() {
 
-        Supplier<PhoneStorage> secondKey = () -> keyForMap.get();
-
+        Supplier<PhoneStorage> secondKey = () -> getKeyForMap().get();
         PhoneStorage phoneRemoveStorage = secondKey.get();
-        if (phoneRemoveStorage != null) {
-            phoneRemoveStorage.getAmount().getAndDecrement();
 
-            productsMap.replace(phoneRemoveStorage.getPhone(), phoneRemoveStorage.getAmount());
-            return (T) phoneRemoveStorage;
-        }
+        productsMap.computeIfPresent(phoneRemoveStorage.getPhone(), (phoneKey, count) -> {
+            if (count.get() != 0) {
+                count = phoneRemoveStorage.getAmount();
+                count.getAndDecrement();
+            }
+            return count;
+        });
 
-        return null;
+        return (T) phoneRemoveStorage;
     }
 
 }

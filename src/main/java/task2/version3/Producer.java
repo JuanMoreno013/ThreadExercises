@@ -33,18 +33,17 @@ public class Producer implements Runnable {
             }
         }
 
-        logger.info("Producing --" + phoneRandom.getPhone().getNameCellphone() + " amount:" + phoneRandom.getAmount());
+        logger.info("Producing --" + phoneRandom.getPhone().getNameCellphone() + " amount:" + mapImplementation.getProductsMap().get(phoneRandom.getPhone()));
     }
 
     @Override
     public void run() {
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 10; i++) {
             try {
                 produceElement();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
 
